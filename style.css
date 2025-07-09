@@ -1,9 +1,20 @@
+@font-face {
+    font-family: SL;
+    src: url('./public/SuisseIntl-Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: SL-R;
+    src: url('./public/SuisseIntl-Regular.woff2') format('woff2');
+}
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'SuisseIntl-Light';
+    font-family: SL;
 }
+
 html,body{
     height:100%;
     width:100%
@@ -12,8 +23,28 @@ html,body{
 #page1{
     height:100vh;
     width:100%;
-    background-color: red;
+    background-color: #fff;
     position: relative;
+}
+
+#cursor{
+    height: 6vw;
+    width: 6vw;
+    background-color: #FF5F38 ;
+    border-radius: 50%;
+    position: fixed;
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#cursor h5{
+    font-size:1.15vw;
+    font-weight: 500;
 }
 
 #page1 video{
@@ -21,16 +52,31 @@ html,body{
     width: 100%;
     object-fit: cover;
     position:absolute;
-
 }
 
 #page1-content{
     height: 100%;
     width: 100%;
-    background-color: rgb(0, 0, 0);
     position: relative;
-    z-index: 2;
+    z-index: 10;
     color: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#page1-content * {
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 nav{
@@ -38,13 +84,93 @@ nav{
     justify-content: space-between;
     height: 100px;
     width: 100%;
-    background-color: red;
     padding: 2vw 3vw;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 nav h3{
     font-size: 1.4vw;
+    font-weight: 100;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
+
 nav h4{
     font-size: 1.4vw;
+    font-weight: 100;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
+
+#page1-content h1{
+    font-family: SL-R;
+    font-size: 27vw;
+    font-weight: 100;
+    line-height: 27vw;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#page1-content h1 span{
+    font-family: SL-R;
+    cursor: none !important;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#page2{
+    height:100vh;
+    width:100%;
+    background-color: whitesmoke ;
+    position: relative;
+}
+
+#page2-heading{
+    display:flex;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    padding: 2vw 3vw;
+}
+
+#pad{
+    padding-top: 4vh;
+}
+
+hr{
+    width: 94%;
+    text-align: center;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+#page2-content{
+    font-family: SL;
+    font-size: 4vw;
+    font-weight: 80;
+    text-align: center;
+    margin-left: 2%;
+}
+
+.elem {
+    overflow: hidden;
+}
+/* 
+.elem h2 {
+    transform: translateY(120px);
+} */
