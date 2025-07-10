@@ -1,36 +1,44 @@
 function locoscroll() {
     gsap.registerPlugin(ScrollTrigger);
 
-    const locoScroll = new LocomotiveScroll({
-        el: document.querySelector("#main"),
-        smooth: true,
-        multiplier: 1,
-        class: "is-revealed"
-    });
+// Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
 
-    // Sync ScrollTrigger with Locomotive Scroll
-    locoScroll.on("scroll", ScrollTrigger.update);
+const locoScroll = new LocomotiveScroll({
+  el: document.querySelector("#main"),
+  smooth: true
+});
+// each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
+locoScroll.on("scroll", ScrollTrigger.update);
 
-    ScrollTrigger.scrollerProxy("#main", {
-        scrollTop(value) {
-            return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
-        },
-        getBoundingClientRect() {
-            return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
-        },
-        pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
-    });
+// tell ScrollTrigger to use these proxy methods for the "#main" element since Locomotive Scroll is hijacking things
+ScrollTrigger.scrollerProxy("#main", {
+  scrollTop(value) {
+    return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
+  }, // we don't have to define a scrollLeft because we're only scrolling vertically.
+  getBoundingClientRect() {
+    return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
+  },
+  // LocomotiveScroll handles things completely differently on mobile devices - it doesn't even transform the container at all! So to get the correct behavior and avoid jitters, we should pin things with position: fixed on mobile. We sense it by checking to see if there's a transform applied to the container (the LocomotiveScroll-controlled element).
+  pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
+});
 
-    ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
-    ScrollTrigger.refresh();
-    
-    return locoScroll;
+// each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
+ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+
+// after everything is set up, refresh() ScrollTrigger and update LocomotiveScroll because padding may have been added for pinning, etc.
+ScrollTrigger.refresh();
+
+console.log("Scrolling")
+
 }
 
 // Enhanced Custom Cursor Effect - More robust version
 function cursorEffect() {
     const page1Content = document.querySelector("#page1-content");
     const cursor = document.querySelector("#cursor");
+    const video=document.querySelector("video")
+    const rejouice=page1Content.querySelector("h1");
+
     let isInside = false;
 
     // Initially hide cursor
@@ -81,6 +89,25 @@ function cursorEffect() {
         }
     });
 
+    page1Content.addEventListener("click",function(){
+        video.muted =!video.muted;
+         if (video.muted) { // Check the element's style.opacity
+             gsap.to(rejouice, {      
+                y:1,
+                opacity:0.7,
+                stagger:0.15, 
+            });
+        } else{
+            gsap.to(rejouice, {      
+                y:80,
+                opacity:0,
+                stagger:0.15, 
+            });
+        }
+
+         
+    })
+
     // Fallback event listeners
     page1Content.addEventListener("mouseenter", function(e) {
         if (!isInside) {
@@ -120,26 +147,71 @@ function page2Animation() {
         scrollTrigger: {
             trigger: "#page2",
             scroller: "#main",
-            start: "top 70%",
+            start: "top 47%",
             end: "top 30%",
             scrub: 2,
-            markers: true // Add this temporarily to debug
+            // markers: true // Add this temporarily to debug
         }
     });
 }
 
+function Swiperanimation(){
+    var swiper = new Swiper(".mySwiper", {
+      slidesPerView: 1,
+      spaceBetween: 30,
+      loop: true,
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: true,
+      }
+    });
+}
+
+function timelines(){
+    var tl=gsap.timeline();
+
+    tl.from("#loader h3",{
+        x:40,
+        opacity:0,
+        duration:1,
+        stagger:0.1,
+    })
+
+    tl.to("#loader h3",{
+        opacity:0,
+        x:-40,
+        stagger:0.1
+    })
+
+    tl.to("#loader",{
+        opacity:0,
+        display:"none"
+    })
+
+    tl.from("#page1-content h1 span",{
+        y:100,
+        opacity:0,
+        stagger:0.15,
+        duration:0.4,
+        delay:-0.1
+    })
+}
+
+
 // Initialize everything
-function init() {
+async function init() {
+    
     // Initialize cursor effect first
-    cursorEffect();
+    await cursorEffect();
     
     // Then initialize Locomotive Scroll
-    const locoScrollInstance = locoscroll();
-    
+    locoscroll();
     // Initialize page animations after a brief delay
-    setTimeout(() => {
-        page2Animation();
-    }, 100);
+    page2Animation();
+
+    Swiperanimation();
+
+    timelines();
 }
 
 // Wait for DOM to load
